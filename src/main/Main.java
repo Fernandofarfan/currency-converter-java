@@ -9,32 +9,36 @@ public class Main {
 	public static void main(String[] args) {
 		
 		while(true) {
-			double input = 0;
-			if(Function.getOption().equals("Conversor de monedas")) {
-				try {
-					input = Double.parseDouble(JOptionPane.showInputDialog("Ingresa la cantidad de Pesos Argentinos"));
+			String selection = Function.getOption();
+			
+			try {
+				if(selection.equals("Conversor de monedas")) {
+					String inputStr = JOptionPane.showInputDialog("Ingresa la cantidad de Pesos Argentinos:");
+					if (inputStr == null) continue;
+					
+					double input = Double.parseDouble(inputStr);
 					Function.verificarInput(input);
-				}catch(NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "No ingresaste un número valido, el programa terminará");
-					break;
-				}catch(IllegalArgumentException ex) {
-					JOptionPane.showMessageDialog(null, "Debes ingresar un número mayor que 0.");
-					continue;
+					ConversorMonedas.convertir(input);
+				} else {
+					String inputStr = JOptionPane.showInputDialog("Ingresa la temperatura en Celsius:");
+					if (inputStr == null) continue;
+					
+					double input = Double.parseDouble(inputStr);
+					ConversorTemperatura.convertir(input);
 				}
-				ConversorMonedas.convertir(input);
-			}else {
-				try {
-					input = Double.parseDouble(JOptionPane.showInputDialog("Ingresa la temperatura en Celcius"));
-				}catch(NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "No ingresaste un número valido, el programa terminará");
-					break;
-				}
-				ConversorTemperatura.convertir(input);
+			} catch(NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Valor no válido. Por favor, ingresa un número.");
+				continue;
+			} catch(IllegalArgumentException ex) {
+				JOptionPane.showMessageDialog(null, "Debes ingresar un número mayor a 0.");
+				continue;
 			}
 			
-			
-			if(JOptionPane.showConfirmDialog(null, "¿Desea realizar otra conversion?") != JOptionPane.YES_OPTION)
+			int response = JOptionPane.showConfirmDialog(null, "¿Deseas realizar otra conversión?", "Confirmar", JOptionPane.YES_NO_OPTION);
+			if (response != JOptionPane.YES_OPTION) {
+				JOptionPane.showMessageDialog(null, "Programa finalizado");
 				break;
+			}
 		}
 	}
 }

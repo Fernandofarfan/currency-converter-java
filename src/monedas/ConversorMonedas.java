@@ -22,35 +22,34 @@ public class ConversorMonedas {
 	
 	 
 	public static void convertir(double input) {
-		String opcion = (String) (JOptionPane.showInputDialog(null, "Seleccione la moneda que quieres convertir", "Moneda,", JOptionPane.PLAIN_MESSAGE, null, FACTOR_CONVERSION.keySet().toArray(), "Seleccion"));
+		Object[] keys = FACTOR_CONVERSION.keySet().toArray();
+		String opcion = (String) JOptionPane.showInputDialog(null, 
+				"Seleccione la moneda que quieres convertir", "Moneda", 
+				JOptionPane.PLAIN_MESSAGE, null, keys, keys[0]);
 		
 		if(opcion == null) {
-			JOptionPane.showMessageDialog(null, "No eligio una opcion, el programa terminará");
-			System.exit(0);
+			return; // Regresar al menú principal en lugar de cerrar el programa
 		}
 		
 		double out = FACTOR_CONVERSION.get(opcion) * input;
-		out = Math.floor(out * 1000) / 1000; //para darle al resultado tres digitos luego de la coma
+		out = Math.floor(out * 1000) / 1000;
 		
-		JOptionPane.showMessageDialog(null, input + " " + controlMoneda(opcion)[0] + " son " + out + " " + controlMoneda(opcion)[1].toLowerCase());
+		String[] monedas = controlMoneda(opcion);
+		JOptionPane.showMessageDialog(null, 
+				String.format("%.2f %s son %.3f %s", input, monedas[0], out, monedas[1].toLowerCase()));
 	}
 
-	
 	/**
-	 * 	Este metodo se usa para saber con que moneda se esta trabajando
-	 * @param opcion
-	 * @return un arreglo con los tipos de monedas usados 
+	 * Extrae los nombres de las monedas de la cadena "De a Para"
+	 * @param opcion La cadena de opción seleccionada
+	 * @return Un arreglo con [monedaOrigen, monedaDestino]
 	 */
 	private static String[] controlMoneda(String opcion) {
-		String[] data = {"", ""};
-		char[] opcionChar = opcion.toCharArray();
-		
-		for(int i = 0; i < opcion.indexOf(" "); i++)
-			data[0] += opcionChar[i];
-		
-		for(int i = opcion.lastIndexOf(" ") + 1; i < opcionChar.length; i++)
-			data[1] += opcionChar[i];
-		
-		return data;
+		// Ejemplo: "Peso/s a Dolar/es" -> ["Peso/s", "Dolar/es"]
+		String[] parts = opcion.split(" a ");
+		if (parts.length == 2) {
+			return parts;
+		}
+		return new String[]{opcion, ""};
 	}
 }
